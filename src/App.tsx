@@ -5,30 +5,30 @@ import { twMerge } from 'tailwind-merge'
 
 function App() {
   const [isOn, setIsOn] = useState(true)
-  const text = `请始终用中文回答我    `
+  const text = `   请始终用中文回答我`
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const [log, setLog] = useState('')
+
   useEffect(() => {
-    if (isOn) {
+    if (!textAreaRef.current) {
       textAreaRef.current = document.querySelector(
         '.GrowingTextArea_textArea__ZWQbP',
       ) as HTMLTextAreaElement
-      if (textAreaRef.current) {
-        if (!textAreaRef.current?.value.startsWith(text.trimEnd())) {
-          textAreaRef.current!.value = text + textAreaRef.current?.value
-        }
-
-        textAreaRef.current?.addEventListener('focus', () => {
-          if (!textAreaRef.current?.value.startsWith(text.trimEnd())) {
-            textAreaRef.current!.value = text + textAreaRef.current?.value
-          }
-        })
-      }
     }
-  }, [])
+    window.addEventListener('keyup', (ev) => {
+      setLog(ev.key)
+      if (textAreaRef.current) {
+        if (!textAreaRef.current?.value.startsWith(text)) {
+          textAreaRef.current!.value = text + textAreaRef.current!.value
+        }
+      }
+    })
+  }, [isOn])
 
   return (
-    <div className={twMerge('fixed right-0  top-1/2 -translate-y-1/2')}>
+    <div
+      className={twMerge('fixed  right-1/2  top-1/2 -translate-y-1/2 bg-white')}
+    >
       <button
         onClick={() => {
           setIsOn(!isOn)
@@ -36,7 +36,7 @@ function App() {
       >
         {isOn ? 'on' : 'off'}
       </button>
-      {/*<div>log:{log}</div>*/}
+      <div>log:{log}</div>
     </div>
   )
 }
